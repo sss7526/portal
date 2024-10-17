@@ -40,13 +40,19 @@ cd portal
 2. Run it
 
 ```bash
-node portal.js
+node portal.js <port> # Default port is 5555 is not specified in command
+
+# or 
+
+node portal.js # This runs on port 5555 by default
 ```
 
 ## Use it
 
-Navigate to http://localhost:5000
-
-(change the port number in portal/portal.js and in portal/public/index.html if you want to use another port)
+Navigate to http://localhost:5555 (default port 5555 if not specified on command line, if you specified a port, go to that port obviously)
 
 Set up nginx reverse proxy to point to it like the wizard you are (secure it though for serious)
+
+## P.S.
+
+Read the above instructions

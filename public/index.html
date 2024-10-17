@@ -34,27 +34,41 @@
 
             fitAddon.fit();
 
+            fetch('/portal/config')
+                .then(response => response.json())
+                .then(config => {
+                    const socket = new WebSocket(`ws://localhost:${config.webSocketPort}`);
+                
+                    socket.onopen = function () {
+                        console.log('Websocket connection established.');
+                    };
+
+                    socket.onmessage = function (event) {
+                        term.write(event.data);
+                    };
+
+                    term.onData(data => socket.send(data));
+
+                    socket.onclose = function () {
+                        term.write('\r\nConnection to server has been closed.');
+                    };
+
+
+            })
+
             window.addEventListener('resize', () => {
                 fit.Addon.fit();
             });
 
-            const socket = new WebSocket('ws://localhost:5000');
-
             // Handle terminal input
-            term.onData(data => socket.send(data));
+            
 
             // Handle terminal output from server
-            socket.onmessage = function (event) {
-                term.write(event.data);
-            };
+            
 
-            socket.onopen = function () {
-                console.log('Websocket connection established.');
-            }
+            
 
-            socket.onclose = function () {
-                term.write('\r\nConnection to server has been closed.');
-            };
+            
         </script>
     </body>
 </html>

@@ -8,13 +8,19 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+const PORT = process.env.PORT || process.argv[2] || 5555;
+
 const terminalShell = process.platform === 'win32' ? 'cmd.exe' : 'bash';
 
 // Serve static files for frontend
 app.use(express.static(path.join(__dirname, 'public')));
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/portal/config', (req, res) => {
+    res.json({ webSocketPort: PORT });
+});
 
 // When websocket is connected, create new pty session (shell)
 wss.on('connection', function connection(ws) {
@@ -42,6 +48,6 @@ wss.on('connection', function connection(ws) {
 });
 
 // Serve on port 5000
-server.listen(5000, function () {
-    console.log('Server is running on http://localhost:5000');
+server.listen(PORT, function () {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
